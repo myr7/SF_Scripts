@@ -1,0 +1,1492 @@
+#Future Revision:  Change wound inclusion/exclusion from wound Wait section.
+#Future Revision:  Change wound inclusion/exclusion from wound Wait section.
+
+
+DEBUG OFF
+SETVARIABLE patient %1
+SETVARIABLE part %2
+SETVARIABLE tag_eval
+SETVARIABLE tag_next
+SETVARIABLE tag_return
+SETVARIABLE cmd
+
+if_1 goto Continue
+goto Fail_Touch
+
+Continue:
+
+#State Management Variables
+
+SETVARIABLE part_head_ext_wound NO
+SETVARIABLE part_head_int_wound NO
+SETVARIABLE part_head_ext_scar NO
+SETVARIABLE part_head_int_scar NO
+SETVARIABLE part_righteye_ext_wound NO
+SETVARIABLE part_righteye_int_wound NO
+SETVARIABLE part_righteye_ext_scar NO
+SETVARIABLE part_righteye_int_scar NO
+SETVARIABLE part_lefteye_ext_wound NO
+SETVARIABLE part_lefteye_int_wound NO
+SETVARIABLE part_lefteye_ext_scar NO
+SETVARIABLE part_lefteye_int_scar NO
+SETVARIABLE part_neck_ext_wound NO
+SETVARIABLE part_neck_int_wound NO
+SETVARIABLE part_neck_ext_scar NO
+SETVARIABLE part_neck_int_scar NO
+SETVARIABLE part_chest_ext_wound NO
+SETVARIABLE part_chest_int_wound NO
+SETVARIABLE part_chest_ext_scar NO
+SETVARIABLE part_chest_int_scar NO
+SETVARIABLE part_head_ext_wound NO
+SETVARIABLE part_head_int_wound NO
+SETVARIABLE part_head_ext_scar NO
+SETVARIABLE part_head_int_scar NO
+SETVARIABLE part_rightarm_ext_wound NO
+SETVARIABLE part_rightarm_int_wound NO
+SETVARIABLE part_rightarm_ext_scar NO
+SETVARIABLE part_rightarm_int_scar NO
+SETVARIABLE part_leftarm_ext_wound NO
+SETVARIABLE part_leftarm_int_wound NO
+SETVARIABLE part_leftarm_ext_scar NO
+SETVARIABLE part_leftarm_int_scar NO
+SETVARIABLE part_abdomen_ext_wound NO
+SETVARIABLE part_abdomen_int_wound NO
+SETVARIABLE part_abdomen_ext_scar NO
+SETVARIABLE part_abdomen_int_scar NO
+SETVARIABLE part_back_ext_wound NO
+SETVARIABLE part_back_int_wound NO
+SETVARIABLE part_back_ext_scar NO
+SETVARIABLE part_back_int_scar NO
+SETVARIABLE part_rightleg_ext_wound NO
+SETVARIABLE part_rightleg_int_wound NO
+SETVARIABLE part_rightleg_ext_scar NO
+SETVARIABLE part_rightleg_int_scar NO
+SETVARIABLE part_leftleg_ext_wound NO
+SETVARIABLE part_leftleg_int_wound NO
+SETVARIABLE part_leftleg_ext_scar NO
+SETVARIABLE part_leftleg_int_scar NO
+SETVARIABLE part_skin_ext_wound NO
+SETVARIABLE part_skin_int_wound NO
+SETVARIABLE part_skin_ext_scar NO
+SETVARIABLE part_skin_int_scar NO
+SETVARIABLE part_righthand_ext_wound NO
+SETVARIABLE part_righthand_int_wound NO
+SETVARIABLE part_righthand_ext_scar NO
+SETVARIABLE part_righthand_int_scar NO
+SETVARIABLE part_lefthand_ext_wound NO
+SETVARIABLE part_lefthand_int_wound NO
+SETVARIABLE part_lefthand_ext_scar NO
+SETVARIABLE part_lefthand_int_scar NO
+#DEBUG ON
+
+
+
+
+Usage:
+
+Begin:
+    ECHO ***********************************************
+    ECHO ***********************************************
+    ECHO *** Your patient is %patient
+    ECHO *** By default this script heals nothing
+    ECHO ***COMMANDS:
+    ECHO ***heal all
+    ECHO ***heal <bodypart>
+    ECHO ***heal internal wounds
+    ECHO ***heal external wounds
+    ECHO ***heal internal scars
+    ECHO ***heal external scars
+    ECHO ***skip <bodypart>
+    ECHO ***skip external wounds
+    ECHO ***skip internal scars
+    ECHO ***skip external scars
+    ECHO ***begin heal - begin healing patient
+    ECHO ***wound list - see what you will be taking
+    ECHO ***********************************************
+    ECHO ***********************************************
+
+StartWait:
+    SETVARIABLE tag_return StartWait
+    match StartWait ...wait
+    match heal_all heal all
+    match heal_head heal head
+    match heal_neck heal neck
+    match heal_rightarm heal right arm
+    match heal_leftarm heal left arm
+    match heal_chest heal chest
+    match heal_abdomen heal abdomen
+    match heal_back heal back
+    match heal_rightleg heal right leg
+    match heal_leftleg heal left leg
+    match heal_righteye heal right eye
+    match heal_lefteye heal left eye
+    match heal_righthand heal right hand
+    match heal_lefthand heal left hand
+    match heal_skin heal skin
+    match heal_int_wounds heal internal wounds
+    match heal_ext_wounds heal external wounds
+    match heal_int_scars heal internal scars
+    match heal_ext_scars heal external scars
+    match skip_head skip head
+    match skip_neck skip neck
+    match skip_rightarm skip right arm
+    match skip_leftarm skip left arm
+    match skip_chest skip chest
+    match skip_abdomen skip abdomen
+    match skip_back skip back
+    match skip_rightleg skip right leg
+    match skip_leftleg skip left leg
+    match skip_righteye skip right eye
+    match skip_lefteye skip left eye
+    match skip_righthand skip right hand
+    match skip_lefthand skip left hand
+    match skip_skin skip skin
+    match skip_int_wounds skip internal wounds
+    match skip_ext_wounds skip external wounds
+    match skip_int_scars skip internal scars
+    match skip_ext_scars skip external scars
+    match wound_list wound list
+    match Touch begin heal
+
+matchwait
+
+
+Touch:
+    match Touch ...wait
+    match TakeCycle You sense a successful empathic link
+    match Fail_Touch Touch what?
+    put TOUCH %patient
+    matchwait
+
+TakeCycle:
+    Wounds:
+        ext_head_wound:
+        SETVARIABLE tag_eval %part_head_ext_wound
+    SETVARIABLE cmd TAKE %patient ext head wound
+    SETVARIABLE tag_next int_head_wound
+    GOTO %tag_eval
+
+        int_head_wound:
+        SETVARIABLE tag_eval %part_head_int_wound
+    SETVARIABLE cmd TAKE %patient int head wound
+    SETVARIABLE tag_next ext_righteye_wound
+    GOTO %tag_eval
+
+        ext_righteye_wound:
+        SETVARIABLE tag_eval %part_righteye_ext_wound
+    SETVARIABLE cmd TAKE %patient ext right eye wound
+    SETVARIABLE tag_next int_righteye_wound
+    GOTO %tag_eval
+
+        int_righteye_wound:
+        SETVARIABLE tag_eval %part_righteye_ext_wound
+    SETVARIABLE cmd TAKE %patient int right eye wound
+    SETVARIABLE tag_next ext_lefteye_wound
+    GOTO %tag_eval
+
+    ext_lefteye_wound:
+        SETVARIABLE tag_eval %part_lefteye_ext_wound
+    SETVARIABLE cmd TAKE %patient ext left eye wound
+    SETVARIABLE tag_next int_lefteye_wound
+    GOTO %tag_eval
+
+        int_lefteye_wound:
+        SETVARIABLE tag_eval %part_lefteye_ext_wound
+    SETVARIABLE cmd TAKE %patient int left eye wound
+    SETVARIABLE tag_next ext_neck_wound
+    GOTO %tag_eval
+
+        ext_neck_wound:
+        SETVARIABLE tag_eval %part_neck_ext_wound
+    SETVARIABLE cmd TAKE %patient ext neck wound
+    SETVARIABLE tag_next ext_chest_wound
+    GOTO %tag_eval
+
+        ext_chest_wound:
+        SETVARIABLE tag_eval %part_chest_ext_wound
+    SETVARIABLE cmd TAKE %patient ext chest wound
+    SETVARIABLE tag_next int_chest_wound
+    GOTO %tag_eval
+
+        int_chest_wound:
+        SETVARIABLE tag_eval %part_chest_int_wound
+    SETVARIABLE cmd TAKE %patient int chest wound
+    SETVARIABLE tag_next ext_rightarm_wound
+    GOTO %tag_eval
+
+        ext_rightarm_wound:
+        SETVARIABLE tag_eval %part_rightarm_ext_wound
+    SETVARIABLE cmd TAKE %patient ext right arm wound
+    SETVARIABLE tag_next int_rightarm_wound
+    GOTO %tag_eval
+
+        int_rightarm_wound:
+        SETVARIABLE tag_eval %part_rightarm_ext_wound
+    SETVARIABLE cmd TAKE %patient int right arm wound
+    SETVARIABLE tag_next ext_leftarm_wound
+    GOTO %tag_eval
+
+    ext_leftarm_wound:
+        SETVARIABLE tag_eval %part_leftarm_ext_wound
+    SETVARIABLE cmd TAKE %patient ext left arm wound
+    SETVARIABLE tag_next int_leftarm_wound
+    GOTO %tag_eval
+
+        int_leftarm_wound:
+        SETVARIABLE tag_eval %part_leftarm_ext_wound
+    SETVARIABLE cmd TAKE %patient int left arm wound
+    SETVARIABLE tag_next ext_abdomen_wound
+    GOTO %tag_eval
+
+
+        ext_abdomen_wound:
+        SETVARIABLE tag_eval %part_abdomen_ext_wound
+    SETVARIABLE cmd TAKE %patient ext abdomen wound
+    SETVARIABLE tag_next int_abdomen_wound
+    GOTO %tag_eval
+
+        int_abdomen_wound:
+        SETVARIABLE tag_eval %part_abdomen_int_wound
+    SETVARIABLE cmd TAKE %patient int abdomen wound
+    SETVARIABLE tag_next ext_back_wound
+    GOTO %tag_eval
+
+        ext_back_wound:
+        SETVARIABLE tag_eval %part_back_ext_wound
+    SETVARIABLE cmd TAKE %patient ext back wound
+    SETVARIABLE tag_next int_back_wound
+    GOTO %tag_eval
+
+        int_back_wound:
+        SETVARIABLE tag_eval %part_back_ext_wound
+    SETVARIABLE cmd TAKE %patient ext back wound
+    SETVARIABLE tag_next ext_rightleg_wound
+    GOTO %tag_eval
+
+        ext_rightleg_wound:
+        SETVARIABLE tag_eval %part_rightleg_ext_wound
+    SETVARIABLE cmd TAKE %patient ext right leg wound
+    SETVARIABLE tag_next int_rightleg_wound
+    GOTO %tag_eval
+
+        int_rightleg_wound:
+        SETVARIABLE tag_eval %part_rightleg_int_wound
+    SETVARIABLE cmd TAKE %patient int right leg wound
+    SETVARIABLE tag_next ext_leftleg_wound
+    GOTO %tag_eval
+
+        ext_leftleg_wound:
+        SETVARIABLE tag_eval %part_leftleg_ext_wound
+    SETVARIABLE cmd TAKE %patient ext left leg wound
+    SETVARIABLE tag_next int_leftleg_wound
+    GOTO %tag_eval
+
+        int_leftleg_wound:
+        SETVARIABLE tag_eval %part_leftleg_int_wound
+    SETVARIABLE cmd TAKE %patient int left leg wound
+    SETVARIABLE tag_next ext_skin_wound
+    GOTO %tag_eval
+
+        ext_skin_wound:
+        SETVARIABLE tag_eval %part_skin_ext_wound
+    SETVARIABLE cmd TAKE %patient ext skin wound
+    SETVARIABLE tag_next int_skin_wound
+    GOTO %tag_eval
+
+        int_skin_wound:
+        SETVARIABLE tag_eval %part_skin_int_wound
+    SETVARIABLE cmd TAKE %patient int skin wound
+    SETVARIABLE tag_next ext_head_scar
+    GOTO %tag_eval
+        
+ext_righthand_wound:
+        SETVARIABLE tag_eval %part_righthand_ext_wound
+    SETVARIABLE cmd TAKE %patient ext right hand wound
+    SETVARIABLE tag_next int_righthand_wound
+    GOTO %tag_eval
+
+int_righthand_wound:
+        SETVARIABLE tag_eval %part_righthand_int_wound
+    SETVARIABLE cmd TAKE %patient int right hand wound
+    SETVARIABLE tag_next ext_lefthand_wound
+    GOTO %tag_eval
+
+ext_lefthand_wound:
+        SETVARIABLE tag_eval %part_lefthand_ext_wound
+    SETVARIABLE cmd TAKE %patient ext left hand wound
+    SETVARIABLE tag_next int_lefthand_wound
+    GOTO %tag_eval
+
+int_lefthand_wound:
+        SETVARIABLE tag_eval %part_lefthand_int_wound
+    SETVARIABLE cmd TAKE %patient int left hand wound
+    SETVARIABLE tag_next ext_head_scar
+    GOTO %tag_eval
+
+
+    Scars:
+        ext_head_scar:
+        SETVARIABLE tag_eval %part_head_ext_scar
+    SETVARIABLE cmd TAKE %patient ext head scar
+    SETVARIABLE tag_next int_head_scar
+    GOTO %tag_eval
+
+        int_head_scar:
+        SETVARIABLE tag_eval %part_head_int_scar
+    SETVARIABLE cmd TAKE %patient int head scar
+    SETVARIABLE tag_next ext_righteye_scar
+GOTO %tag_eval
+
+        ext_righteye_scar:
+        SETVARIABLE tag_eval %part_righteye_ext_scar
+    SETVARIABLE cmd TAKE %patient ext right eye scar
+    SETVARIABLE tag_next int_righteye_scar
+    GOTO %tag_eval
+
+        int_righteye_scar:
+        SETVARIABLE tag_eval %part_righteye_int_scar
+    SETVARIABLE cmd TAKE %patient int right eye scar
+    SETVARIABLE tag_next ext_lefteye_scar
+    GOTO %tag_eval
+
+        ext_lefteye_scar:
+        SETVARIABLE tag_eval %part_lefteye_ext_scar
+    SETVARIABLE cmd TAKE %patient ext left eye scar
+    SETVARIABLE tag_next int_lefteye_scar
+    GOTO %tag_eval
+
+        int_lefteye_scar:
+        SETVARIABLE tag_eval %part_lefteye_int_scar
+    SETVARIABLE cmd TAKE %patient int left eye scar
+    SETVARIABLE tag_next ext_neck_scar
+    GOTO %tag_eval
+
+        ext_neck_scar:
+        SETVARIABLE tag_eval %part_neck_ext_scar
+    SETVARIABLE cmd TAKE %patient ext neck scar
+    SETVARIABLE tag_next ext_chest_scar
+    GOTO %tag_eval
+
+        ext_chest_scar:
+        SETVARIABLE tag_eval %part_chest_ext_scar
+    SETVARIABLE cmd TAKE %patient ext chest scar
+    SETVARIABLE tag_next int_chest_scar
+    GOTO %tag_eval
+
+        int_chest_scar:
+        SETVARIABLE tag_eval %part_chest_int_scar
+    SETVARIABLE cmd TAKE %patient int chest scar
+    SETVARIABLE tag_next ext_rightarm_scar
+    GOTO %tag_eval
+
+        ext_rightarm_scar:
+        SETVARIABLE tag_eval %part_rightarm_ext_scar
+    SETVARIABLE cmd TAKE %patient ext right arm scar
+    SETVARIABLE tag_next int_rightarm_scar
+    GOTO %tag_eval
+
+        int_rightarm_scar:
+        SETVARIABLE tag_eval %part_rightarm_ext_scar
+    SETVARIABLE cmd TAKE %patient int right arm scar
+    SETVARIABLE tag_next ext_leftarm_scar
+    GOTO %tag_eval
+
+ext_leftarm_scar:
+        SETVARIABLE tag_eval %part_leftarm_ext_scar
+    SETVARIABLE cmd TAKE %patient ext left arm scar
+    SETVARIABLE tag_next int_leftarm_scar
+    GOTO %tag_eval
+
+int_leftarm_scar:
+        SETVARIABLE tag_eval %part_leftarm_int_scar
+    SETVARIABLE cmd TAKE %patient int left arm scar
+    SETVARIABLE tag_next ext_abdomen_scar
+    GOTO %tag_eval
+
+        ext_abdomen_scar:
+        SETVARIABLE tag_eval %part_abdomen_ext_scar
+    SETVARIABLE cmd TAKE %patient ext abdomen scar
+    SETVARIABLE tag_next int_abdomen_scar
+    GOTO %tag_eval
+
+        int_abdomen_scar:
+        SETVARIABLE tag_eval %part_abdomen_int_scar
+    SETVARIABLE cmd TAKE %patient int abdomen scar
+    SETVARIABLE tag_next ext_back_scar
+    GOTO %tag_eval
+
+        ext_back_scar:
+        SETVARIABLE tag_eval %part_back_ext_scar
+    SETVARIABLE cmd TAKE %patient ext back scar
+    SETVARIABLE tag_next int_back_scar
+    GOTO %tag_eval
+
+        int_back_scar:
+        SETVARIABLE tag_eval %part_back_ext_scar
+    SETVARIABLE cmd TAKE %patient ext back scar
+    SETVARIABLE tag_next ext_rightleg_scar
+    GOTO %tag_eval
+
+        ext_rightleg_scar:
+        SETVARIABLE tag_eval %part_rightleg_ext_scar
+    SETVARIABLE cmd TAKE %patient ext right leg scar
+    SETVARIABLE tag_next int_rightleg_scar
+    GOTO %tag_eval
+
+        int_rightleg_scar:
+        SETVARIABLE tag_eval %part_rightleg_int_scar
+    SETVARIABLE cmd TAKE %patient int right leg scar
+    SETVARIABLE tag_next ext_leftleg_scar
+    GOTO %tag_eval
+
+        ext_leftleg_scar:
+        SETVARIABLE tag_eval %part_leftleg_ext_scar
+    SETVARIABLE cmd TAKE %patient ext left leg scar
+    SETVARIABLE tag_next int_leftleg_scar
+    GOTO %tag_eval
+
+        int_leftleg_scar:
+        SETVARIABLE tag_eval %part_leftleg_int_scar
+    SETVARIABLE cmd TAKE %patient int left leg scar
+    SETVARIABLE tag_next ext_righthand_scar
+    GOTO %tag_eval
+
+ext_righthand_scar:
+        SETVARIABLE tag_eval %part_righthand_ext_scar
+    SETVARIABLE cmd TAKE %patient ext right hand scar
+    SETVARIABLE tag_next int_righthand_scar
+    GOTO %tag_eval
+
+int_righthand_scar:
+        SETVARIABLE tag_eval %part_righthand_int_scar
+    SETVARIABLE cmd TAKE %patient int right hand scar
+    SETVARIABLE tag_next ext_lefthand_scar
+    GOTO %tag_eval
+
+ext_lefthand_scar:
+        SETVARIABLE tag_eval %part_lefthand_ext_scar
+    SETVARIABLE cmd TAKE %patient ext left hand scar
+    SETVARIABLE tag_next int_lefthand_scar
+    GOTO %tag_eval
+
+int_lefthand_scar:
+        SETVARIABLE tag_eval %part_lefthand_int_scar
+    SETVARIABLE cmd TAKE %patient int left hand scar
+    SETVARIABLE tag_next ext_skin_scar
+    GOTO %tag_eval
+
+
+        ext_skin_scar:
+        SETVARIABLE tag_eval %part_skin_ext_scar
+    SETVARIABLE cmd TAKE %patient ext skin scar
+    SETVARIABLE tag_next int_skin_scar
+    GOTO %tag_eval
+
+        int_skin_scar:
+        SETVARIABLE tag_eval %part_skin_int_scar
+    SETVARIABLE cmd TAKE %patient int skin scar
+    SETVARIABLE tag_next PreWait
+    GOTO %tag_eval
+        
+
+
+NO:
+#False/Skip
+GOTO %tag_next
+YES:
+#True/Take
+GOTO Take
+
+ReTouch:
+    put TOUCH %patient
+    wait
+    goto Take
+
+Take:
+    match Take ...wait
+match %tag_next You don't have enough experience to transfer
+match %tag_next You feel the transfer beginning
+match ReTouch You have no empathic link
+match Fail_Quick You are not skilled enough to transfer at an accelerated rate
+match %tag_next You already are transferring
+put %cmd
+matchwait
+
+PreWait:
+    ECHO *****Interactive Transfer Commands*******
+    ECHO ***restart transfer - re-initiates all transfers
+    ECHO ***menu start - brings you back to the wound selection menu
+Wait:
+    SETVARIABLE tag_return Wait
+    match Wait ...wait
+    match TakeCycle restart transfer
+    match Begin menu start
+#match TurnOffHead no more injuries to transfer from the head
+match TurnOffHead_EW head wounds are fully healed.
+match TurnOffHead_IW head bruises are fully healed.
+match TurnOffHead_ES head scars are fully healed.
+match TurnOffHead_IS head twitches are fully healed
+#match TurnOffRightEye no more injuries to transfer from the right eye
+match TurnOffRightEye_EW right eye wounds are fully healed.
+match TurnOffRightEye_IW right eye bruises are fully healed.
+match TurnOffRightEye_ES right eye scars are fully healed.
+match TurnOffRightEye_IS right eye twitches are fully healed
+#match TurnOffLeftEye no more injuries to transfer from the left eye
+match TurnOffLeftEye_EW left eye wounds are fully healed.
+match TurnOffLeftEye_IW left eye bruises are fully healed.
+match TurnOffLeftEye_ES left eye scars are fully healed.
+match TurnOffLeftEye_IS left eye twitches are fully healed
+#match TurnOffNeck no more injuries to transfer from the neck
+match TurnOffNeck_EW neck wounds are fully healed.
+match TurnOffNeck_IW neck bruises are fully healed.
+match TurnOffNeck_ES neck scars are fully healed.
+match TurnOffNeck_IS neck twitches are fully healed
+#match TurnOffChest no more injuries to transfer from the chest
+match TurnOffChest_EW chest wounds are fully healed.
+match TurnOffChest_IW chest bruises are fully healed.
+match TurnOffChest_ES chest scars are fully healed.
+match TurnOffChest_IS chest twitches are fully healed
+#match TurnOffRightArm no more injuries to transfer from the right arm
+match TurnOffRightArm_EW right arm wounds are fully healed.
+match TurnOffRightArm_IW right arm bruises are fully healed.
+match TurnOffRightArm_ES right arm scars are fully healed.
+match TurnOffRightArm_IS right arm twitches are fully healed
+#match TurnOffLeftArm no more injuries to transfer from the left arm
+match TurnOffLeftArm_EW left arm wounds are fully healed.
+match TurnOffLeftArm_IW left arm bruises are fully healed.
+match TurnOffLeftArm_ES left arm scars are fully healed.
+match TurnOffLeftArm_IS left arm twitches are fully healed
+#match TurnOffRightLeg no more injuries to transfer from the right leg
+match TurnOffRightLeg_EW right leg wounds are fully healed.
+match TurnOffRightLeg_IW right leg bruises are fully healed.
+match TurnOffRightLeg_ES right leg scars are fully healed.
+match TurnOffRightLeg_IS right leg twitches are fully healed
+#match TurnOffLeftLeg no more injuries to transfer from the left leg
+match TurnOffLeftLeg_EW left leg wounds are fully healed.
+match TurnOffLeftLeg_IW left leg bruises are fully healed.
+match TurnOffLeftLeg_ES left leg scars are fully healed.
+match TurnOffLeftLeg_IS left leg twitches are fully healed
+#match TurnOffAbdomen no more injuries to transfer from the abdomen
+match TurnOffAbdomen_EW abdomen wounds are fully healed.
+match TurnOffAbdomen_IW abdomen bruises are fully healed.
+match TurnOffAbdomen_ES abdomen scars are fully healed.
+match TurnOffAbdomen_IS abdomen twitches are fully healed
+#match TurnOffBack no more injuries to transfer from the back
+match TurnOffBack_EW back wounds are fully healed.
+match TurnOffBack_IW back bruises are fully healed.
+match TurnOffBack_ES back scars are fully healed.
+match TurnOffBack_IS back twitches are fully healed
+#match TurnOffSkin no more injuries to transfer from the nervous system
+match TurnOffSkin_EW nervous system wounds are fully healed.
+match TurnOffSkin_IW nervous system bruises are fully healed.
+match TurnOffSkin_ES nervous system scars are fully healed.
+match TurnOffSkin_IS nervous system twitches are fully healed
+
+#match TurnOffRightHand no more injuries to transfer from the right hand
+match TurnOffRightHand_EW right hand wounds are fully healed.
+match TurnOffRightHand_IW right hand bruises are fully healed.
+match TurnOffRightHand_ES right hand scars are fully healed.
+match TurnOffRightHand_IS right hand twitches are fully healed
+#match TurnOffLeftHand no more injuries to transfer from the left hand
+match TurnOffLeftHand_EW left hand wounds are fully healed.
+match TurnOffLeftHand_IW left hand bruises are fully healed.
+match TurnOffLeftHand_ES left hand scars are fully healed.
+match TurnOffLeftHand_IS left hand twitches are fully healed
+
+matchwait
+
+
+##############
+## Turn off Things to Take Section
+##############
+
+TurnOffHead_EW:
+    SETVARIABLE part_head_ext_wound NO
+    GOTO Wait
+
+TurnOffHead_IW:
+    SETVARIABLE part_head_int_wound NO
+    GOTO Wait
+
+TurnOffHead_ES:
+
+    SETVARIABLE part_head_ext_scar NO
+
+    GOTO Wait
+
+TurnOffHead_IS:
+
+    SETVARIABLE part_head_int_scar NO
+
+    GOTO Wait
+
+TurnOffRightEye_EW:
+
+    SETVARIABLE part_righteye_ext_wound NO
+
+    GOTO Wait
+
+TurnOffRightEye_IW:
+
+    SETVARIABLE part_righteye_int_wound NO
+
+    GOTO Wait
+
+TurnOffRightEye_ES:
+
+    SETVARIABLE part_righteye_ext_scar NO
+
+    GOTO Wait
+
+TurnOffRightEye_IS:
+
+    SETVARIABLE part_righteye_int_scar NO
+
+    GOTO Wait
+
+TurnOffLeftEye_EW:
+
+    SETVARIABLE part_lefteye_ext_wound NO
+
+    GOTO Wait
+
+TurnOffLeftEye_IW:
+
+    SETVARIABLE part_lefteye_int_wound NO
+
+    GOTO Wait
+
+TurnOffLeftEye_ES:
+
+    SETVARIABLE part_lefteye_ext_scar NO
+
+    GOTO Wait
+
+TurnOffLeftEye_IS:
+
+    SETVARIABLE part_head_int_scar NO
+
+    GOTO Wait
+
+TurnOffNeck_EW:
+
+    SETVARIABLE part_neck_ext_wound NO
+
+    GOTO Wait
+
+TurnOffNeck_IW:
+
+    SETVARIABLE part_neck_int_wound NO
+
+    GOTO Wait
+
+TurnOffNeck_ES:
+
+    SETVARIABLE part_neck_ext_scar NO
+
+    GOTO Wait
+
+TurnOffNeck_IS:
+
+    SETVARIABLE part_neck_int_scar NO
+
+    GOTO Wait
+
+TurnOffChest_EW:
+
+    SETVARIABLE part_chest_ext_wound NO
+
+    GOTO Wait
+
+TurnOffChest_IW:
+
+    SETVARIABLE part_chest_int_wound NO
+
+    GOTO Wait
+
+TurnOffChest_ES:
+
+    SETVARIABLE part_chest_ext_scar NO
+
+    GOTO Wait
+
+TurnOffChest_IS:
+
+    SETVARIABLE part_chest_int_scar NO
+
+    GOTO Wait
+
+TurnOffRightArm_EW:
+
+    SETVARIABLE part_rightarm_ext_wound NO
+
+    GOTO Wait
+
+TurnOffRightArm_IW:
+
+    SETVARIABLE part_rightarm_int_wound NO
+
+    GOTO Wait
+
+TurnOffRightArm_ES:
+
+    SETVARIABLE part_rightarm_ext_scar NO
+
+    GOTO Wait
+
+TurnOffRightArm_IS:
+
+    SETVARIABLE part_rightarm_int_scar NO
+
+    GOTO Wait
+
+TurnOffLeftArm_EW:
+
+    SETVARIABLE part_leftarm_ext_wound NO
+
+    GOTO Wait
+
+TurnOffLeftArm_IW:
+
+    SETVARIABLE part_leftarm_int_wound NO
+
+    GOTO Wait
+
+TurnOffLeftArm_ES:
+
+    SETVARIABLE part_leftarm_ext_scar NO
+
+    GOTO Wait
+
+TurnOffLeftArm_IS:
+
+    SETVARIABLE part_leftarm_int_scar NO
+
+    GOTO Wait
+
+TurnOffRightLeg_EW:
+
+    SETVARIABLE part_rightleg_ext_wound NO
+
+    GOTO Wait
+
+TurnOffRightLeg_IW:
+
+    SETVARIABLE part_rightleg_int_wound NO
+
+    GOTO Wait
+
+TurnOffRightLeg_ES:
+
+    SETVARIABLE part_rightleg_ext_scar NO
+
+    GOTO Wait
+
+TurnOffRightLeg_IS:
+
+    SETVARIABLE part_rightleg_int_scar NO
+
+    GOTO Wait
+
+TurnOffLeftLeg_EW:
+
+    SETVARIABLE part_leftleg_ext_wound NO
+
+    GOTO Wait
+
+TurnOffLeftLeg_IW:
+
+    SETVARIABLE part_leftleg_int_wound NO
+
+    GOTO Wait
+
+TurnOffLeftLeg_ES:
+
+    SETVARIABLE part_leftleg_ext_scar NO
+
+    GOTO Wait
+
+TurnOffLeftLeg_IS:
+
+    SETVARIABLE part_leftleg_int_scar NO
+
+    GOTO Wait
+
+TurnOffAbdomen_EW:
+
+    SETVARIABLE part_abdomen_ext_wound NO
+
+    GOTO Wait
+
+TurnOffAbdomen_IW:
+
+    SETVARIABLE part_abdomen_int_wound NO
+
+    GOTO Wait
+
+TurnOffAbdomen_ES:
+
+    SETVARIABLE part_abdomen_ext_scar NO
+
+    GOTO Wait
+
+TurnOffAbdomen_IS:
+
+    SETVARIABLE part_abdomen_int_scar NO
+
+    GOTO Wait
+
+TurnOffBack_EW:
+
+    SETVARIABLE part_back_ext_wound NO
+
+    GOTO Wait
+
+TurnOffBack_IW:
+
+    SETVARIABLE part_back_int_wound NO
+
+    GOTO Wait
+
+TurnOffBack_ES:
+
+    SETVARIABLE part_back_ext_scar NO
+
+    GOTO Wait
+
+TurnOffBack_IS:
+
+    SETVARIABLE part_back_int_scar NO
+
+    GOTO Wait
+
+TurnOffSkin_EW:
+
+    SETVARIABLE part_skin_ext_wound NO
+
+    GOTO Wait
+
+TurnOffSkin_IW:
+
+    SETVARIABLE part_skin_int_wound NO
+
+    GOTO Wait
+
+TurnOffSkin_ES:
+
+    SETVARIABLE part_skin_ext_scar NO
+
+    GOTO Wait
+
+TurnOffSkin_IS:
+
+    SETVARIABLE part_skin_int_scar NO
+
+    GOTO Wait
+
+
+TurnOffRightHand_EW:
+
+    SETVARIABLE part_righthand_ext_wound NO
+
+    GOTO Wait
+
+TurnOffRightHand_IW:
+
+    SETVARIABLE part_righthand_int_wound NO
+
+    GOTO Wait
+
+TurnOffRightHand_ES:
+
+    SETVARIABLE part_righthand_ext_scar NO
+
+    GOTO Wait
+
+TurnOffRightHand_IS:
+
+    SETVARIABLE part_righthand_int_scar NO
+
+    GOTO Wait
+
+TurnOffLeftHand_EW:
+
+    SETVARIABLE part_lefthand_ext_wound NO
+
+    GOTO Wait
+
+TurnOffLeftHand_IW:
+
+    SETVARIABLE part_lefthand_int_wound NO
+
+    GOTO Wait
+
+TurnOffLeftHand_ES:
+
+    SETVARIABLE part_lefthand_ext_scar NO
+
+    GOTO Wait
+
+TurnOffLeftHand_IS:
+
+    SETVARIABLE part_lefthand_int_scar NO
+
+    GOTO Wait
+
+
+
+
+
+
+##############
+## Wound Selection Changes
+##############
+heal_all:
+    echo Healing all bodyparts
+    SETVARIABLE part_head_ext_wound YES
+    SETVARIABLE part_head_int_wound YES
+    SETVARIABLE part_head_ext_scar YES
+    SETVARIABLE part_head_int_scar YES
+    SETVARIABLE part_righteye_ext_wound YES
+    SETVARIABLE part_righteye_int_wound YES
+    SETVARIABLE part_righteye_ext_scar YES
+    SETVARIABLE part_righteye_int_scar YES
+    SETVARIABLE part_lefteye_ext_wound YES
+    SETVARIABLE part_lefteye_int_wound YES
+    SETVARIABLE part_lefteye_ext_scar YES
+    SETVARIABLE part_lefteye_int_scar YES
+    SETVARIABLE part_neck_ext_wound YES
+    SETVARIABLE part_neck_int_wound YES
+    SETVARIABLE part_neck_ext_scar YES
+    SETVARIABLE part_neck_int_scar YES
+    SETVARIABLE part_chest_ext_wound YES
+    SETVARIABLE part_chest_int_wound YES
+    SETVARIABLE part_chest_ext_scar YES
+    SETVARIABLE part_chest_int_scar YES
+    SETVARIABLE part_head_ext_wound YES
+    SETVARIABLE part_head_int_wound YES
+    SETVARIABLE part_head_ext_scar YES
+    SETVARIABLE part_head_int_scar YES
+    SETVARIABLE part_rightarm_ext_wound YES
+    SETVARIABLE part_rightarm_int_wound YES
+    SETVARIABLE part_rightarm_ext_scar YES
+    SETVARIABLE part_rightarm_int_scar YES
+    SETVARIABLE part_leftarm_ext_wound YES
+    SETVARIABLE part_leftarm_int_wound YES
+    SETVARIABLE part_leftarm_ext_scar YES
+    SETVARIABLE part_leftarm_int_scar YES
+    SETVARIABLE part_abdomen_ext_wound YES
+    SETVARIABLE part_abdomen_int_wound YES
+    SETVARIABLE part_abdomen_ext_scar YES
+    SETVARIABLE part_abdomen_int_scar YES
+    SETVARIABLE part_back_ext_wound YES
+    SETVARIABLE part_back_int_wound YES
+    SETVARIABLE part_back_ext_scar YES
+    SETVARIABLE part_back_int_scar YES
+    SETVARIABLE part_rightleg_ext_wound YES
+    SETVARIABLE part_rightleg_int_wound YES
+    SETVARIABLE part_rightleg_ext_scar YES
+    SETVARIABLE part_rightleg_int_scar YES
+    SETVARIABLE part_leftleg_ext_wound YES
+    SETVARIABLE part_leftleg_int_wound YES
+    SETVARIABLE part_leftleg_ext_scar YES
+    SETVARIABLE part_leftleg_int_scar YES
+    SETVARIABLE part_skin_ext_wound YES
+    SETVARIABLE part_skin_int_wound YES
+    SETVARIABLE part_skin_ext_scar YES
+    SETVARIABLE part_skin_int_scar YES
+
+    SETVARIABLE part_righthand_ext_wound YES
+    SETVARIABLE part_righthand_int_wound YES
+    SETVARIABLE part_righthand_ext_scar YES
+    SETVARIABLE part_righthand_int_scar YES
+    SETVARIABLE part_lefthand_ext_wound YES
+    SETVARIABLE part_lefthand_int_wound YES
+    SETVARIABLE part_lefthand_ext_scar YES
+    SETVARIABLE part_lefthand_int_scar YES
+
+
+    GOTO %tag_return
+heal_head:
+    echo Healing head
+    SETVARIABLE part_head_ext_wound YES
+    SETVARIABLE part_head_int_wound YES
+    SETVARIABLE part_head_ext_scar YES
+    SETVARIABLE part_head_int_scar YES
+
+    GOTO %tag_return
+heal_righteye:
+    echo Healing right eye
+    SETVARIABLE part_righteye_ext_wound YES
+    SETVARIABLE part_righteye_int_wound YES
+    SETVARIABLE part_righteye_ext_scar YES
+    SETVARIABLE part_righteye_int_scar YES
+    GOTO %tag_return
+heal_lefteye:
+    echo Healing left eye
+    SETVARIABLE part_lefteye_ext_wound YES
+    SETVARIABLE part_lefteye_int_wound YES
+    SETVARIABLE part_lefteye_ext_scar YES
+    SETVARIABLE part_lefteye_int_scar YES
+    GOTO %tag_return
+
+heal_righthand:
+    echo Healing right hand
+    SETVARIABLE part_righthand_ext_wound YES
+    SETVARIABLE part_righthand_int_wound YES
+    SETVARIABLE part_righthand_ext_scar YES
+    SETVARIABLE part_righthand_int_scar YES
+    GOTO %tag_return
+heal_lefthand:
+    echo Healing left hand
+    SETVARIABLE part_lefthand_ext_wound YES
+    SETVARIABLE part_lefthand_int_wound YES
+    SETVARIABLE part_lefthand_ext_scar YES
+    SETVARIABLE part_lefthand_int_scar YES
+    GOTO %tag_return
+
+heal_neck:
+    echo Healing neck
+    SETVARIABLE part_neck_ext_wound YES
+    SETVARIABLE part_neck_int_wound YES
+    SETVARIABLE part_neck_ext_scar YES
+    SETVARIABLE part_neck_int_scar YES
+    GOTO %tag_return
+
+heal_rightarm:
+    echo Healing right arm
+    SETVARIABLE part_rightarm_ext_wound YES
+    SETVARIABLE part_rightarm_int_wound YES
+    SETVARIABLE part_rightarm_ext_scar YES
+    SETVARIABLE part_rightarm_int_scar YES
+    GOTO %tag_return
+
+heal_leftarm:
+    echo Healing left arm
+    SETVARIABLE part_leftarm_ext_wound YES
+    SETVARIABLE part_leftarm_int_wound YES
+    SETVARIABLE part_leftarm_ext_scar YES
+    SETVARIABLE part_leftarm_int_scar YES
+    GOTO %tag_return
+
+heal_chest:
+    echo Healing chest
+    SETVARIABLE part_chest_ext_wound YES
+    SETVARIABLE part_chest_int_wound YES
+    SETVARIABLE part_chest_ext_scar YES
+    SETVARIABLE part_chest_int_scar YES
+    GOTO %tag_return
+
+heal_abdomen:
+    echo Healing abdomen
+    SETVARIABLE part_abdomen_ext_wound YES
+    SETVARIABLE part_abdomen_int_wound YES
+    SETVARIABLE part_abdomen_ext_scar YES
+    SETVARIABLE part_abdomen_int_scar YES
+    GOTO %tag_return
+
+heal_back:
+    ECHO Healing Back
+    SETVARIABLE part_abdomen_ext_wound YES
+    SETVARIABLE part_abdomen_int_wound YES
+    SETVARIABLE part_abdomen_ext_scar YES
+    SETVARIABLE part_abdomen_int_scar YES
+    GOTO %tag_return
+
+heal_rightleg:
+    ECHO Healing Right Leg
+    SETVARIABLE part_rightleg_ext_wound YES
+    SETVARIABLE part_rightleg_int_wound YES
+    SETVARIABLE part_rightleg_ext_scar YES
+    SETVARIABLE part_rightleg_int_scar YES
+    GOTO %tag_return
+
+heal_leftleg:
+    ECHO Healing Left Leg
+    SETVARIABLE part_leftleg_ext_wound YES
+    SETVARIABLE part_leftleg_int_wound YES
+    SETVARIABLE part_leftleg_ext_scar YES
+    SETVARIABLE part_leftleg_int_scar YES
+    GOTO %tag_return
+
+heal_skin:
+    echo Healing nervous system
+    SETVARIABLE part_skin_ext_wound YES
+    SETVARIABLE part_skin_int_wound YES
+    SETVARIABLE part_skin_ext_scar YES
+    SETVARIABLE part_skin_int_scar YES
+    GOTO %tag_return
+
+heal_ext_wounds:
+   echo Healing external wounds
+   SETVARIABLE part_head_ext_wound YES
+   SETVARIABLE part_righteye_ext_wound YES
+   SETVARIABLE part_lefteye_ext_wound YES
+   SETVARIABLE part_righthand_ext_wound YES
+   SETVARIABLE part_lefthand_ext_wound YES
+   SETVARIABLE part_neck_ext_wound YES
+   SETVARIABLE part_chest_ext_wound YES
+   SETVARIABLE part_head_ext_wound YES
+   SETVARIABLE part_rightarm_ext_wound YES
+   SETVARIABLE part_leftarm_ext_wound YES
+   SETVARIABLE part_abdomen_ext_wound YES
+   SETVARIABLE part_back_ext_wound YES
+   SETVARIABLE part_rightleg_ext_wound YES
+   SETVARIABLE part_leftleg_ext_wound YES
+   SETVARIABLE part_skin_ext_wound YES
+    GOTO %tag_return
+
+heal_int_wounds:
+   echo Healing internal wounds
+
+   SETVARIABLE part_head_int_wound YES
+   SETVARIABLE part_righteye_int_wound YES
+   SETVARIABLE part_lefteye_int_wound YES
+   SETVARIABLE part_righthand_int_wound YES
+   SETVARIABLE part_lefthand_int_wound YES
+   SETVARIABLE part_neck_int_wound YES
+   SETVARIABLE part_chest_int_wound YES
+   SETVARIABLE part_head_int_wound YES
+   SETVARIABLE part_rightarm_int_wound YES
+   SETVARIABLE part_leftarm_int_wound YES
+   SETVARIABLE part_abdomen_int_wound YES
+   SETVARIABLE part_back_int_wound YES
+   SETVARIABLE part_rightleg_int_wound YES
+   SETVARIABLE part_leftleg_int_wound YES
+   SETVARIABLE part_skin_int_wound YES
+
+    GOTO %tag_return
+
+heal_ext_scars:
+   echo Healing external scars
+   SETVARIABLE part_head_ext_scar YES
+   SETVARIABLE part_righteye_ext_scar YES
+   SETVARIABLE part_lefteye_ext_scar YES
+   SETVARIABLE part_righthand_ext_scar YES
+   SETVARIABLE part_lefthand_ext_scar YES
+   SETVARIABLE part_neck_ext_scar YES
+   SETVARIABLE part_chest_ext_scar YES
+   SETVARIABLE part_head_ext_scar YES
+   SETVARIABLE part_rightarm_ext_scar YES
+   SETVARIABLE part_leftarm_ext_scar YES
+   SETVARIABLE part_abdomen_ext_scar YES
+   SETVARIABLE part_back_ext_scar YES
+   SETVARIABLE part_rightleg_ext_scar YES
+   SETVARIABLE part_leftleg_ext_scar YES
+   SETVARIABLE part_skin_ext_scar YES
+
+    GOTO %tag_return
+
+heal_int_scars:
+   echo Healing internal scars
+   SETVARIABLE part_head_int_scar YES
+   SETVARIABLE part_righteye_int_scar YES
+   SETVARIABLE part_lefteye_int_scar YES
+   SETVARIABLE part_righthand_int_scar YES
+   SETVARIABLE part_lefthand_int_scar YES
+   SETVARIABLE part_neck_int_scar YES
+   SETVARIABLE part_chest_int_scar YES
+   SETVARIABLE part_head_int_scar YES
+   SETVARIABLE part_rightarm_int_scar YES
+   SETVARIABLE part_leftarm_int_scar YES
+   SETVARIABLE part_abdomen_int_scar YES
+   SETVARIABLE part_back_int_scar YES
+   SETVARIABLE part_rightleg_int_scar YES
+   SETVARIABLE part_leftleg_int_scar YES
+   SETVARIABLE part_skin_int_scar YES
+
+    GOTO %tag_return
+
+
+skip_head:
+    echo Skipping head
+    SETVARIABLE part_head_ext_wound NO
+    SETVARIABLE part_head_int_wound NO
+    SETVARIABLE part_head_ext_scar NO
+    SETVARIABLE part_head_int_scar NO
+    GOTO %tag_return
+skip_righteye:
+    echo Skipping right eye
+    SETVARIABLE part_righteye_ext_wound NO
+    SETVARIABLE part_righteye_int_wound NO
+    SETVARIABLE part_righteye_ext_scar NO
+    SETVARIABLE part_righteye_int_scar NO
+    GOTO %tag_return
+skip_lefteye:
+    echo Skipping left eye
+    SETVARIABLE part_lefteye_ext_wound NO
+    SETVARIABLE part_lefteye_int_wound NO
+    SETVARIABLE part_lefteye_ext_scar NO
+    SETVARIABLE part_lefteye_int_scar NO
+    GOTO %tag_return
+
+skip_righthand:
+    echo Skipping right hand
+    SETVARIABLE part_righthand_ext_wound NO
+    SETVARIABLE part_righthand_int_wound NO
+    SETVARIABLE part_righthand_ext_scar NO
+    SETVARIABLE part_righthand_int_scar NO
+    GOTO %tag_return
+skip_lefthand:
+    echo Skipping left hand
+    SETVARIABLE part_lefthand_ext_wound NO
+    SETVARIABLE part_lefthand_int_wound NO
+    SETVARIABLE part_lefthand_ext_scar NO
+    SETVARIABLE part_lefthand_int_scar NO
+    GOTO %tag_return
+
+
+skip_neck:
+    echo Skipping neck
+    SETVARIABLE part_neck_ext_wound NO
+    SETVARIABLE part_neck_int_wound NO
+    SETVARIABLE part_neck_ext_scar NO
+    SETVARIABLE part_neck_int_scar NO
+    GOTO %tag_return
+
+skip_rightarm:
+    echo Skipping right arm
+    SETVARIABLE part_rightarm_ext_wound NO
+    SETVARIABLE part_rightarm_int_wound NO
+    SETVARIABLE part_rightarm_ext_scar NO
+    SETVARIABLE part_rightarm_int_scar NO
+    GOTO %tag_return
+
+skip_leftarm:
+    echo Skipping left arm
+    SETVARIABLE part_leftarm_ext_wound NO
+    SETVARIABLE part_leftarm_int_wound NO
+    SETVARIABLE part_leftarm_ext_scar NO
+    SETVARIABLE part_leftarm_int_scar NO
+    GOTO %tag_return
+
+skip_chest:
+    echo Skipping chest
+    SETVARIABLE part_chest_ext_wound NO
+    SETVARIABLE part_chest_int_wound NO
+    SETVARIABLE part_chest_ext_scar NO
+    SETVARIABLE part_chest_int_scar NO
+    GOTO %tag_return
+
+skip_abdomen:
+    echo Skipping abdomen
+    SETVARIABLE part_abdomen_ext_wound NO
+    SETVARIABLE part_abdomen_int_wound NO
+    SETVARIABLE part_abdomen_ext_scar NO
+    SETVARIABLE part_abdomen_int_scar NO
+    GOTO %tag_return
+
+skip_back:
+    ECHO Skipping Back
+    SETVARIABLE part_abdomen_ext_wound NO
+    SETVARIABLE part_abdomen_int_wound NO
+    SETVARIABLE part_abdomen_ext_scar NO
+    SETVARIABLE part_abdomen_int_scar NO
+    GOTO %tag_return
+
+skip_rightleg:
+    ECHO Skipping Right Leg
+    SETVARIABLE part_rightleg_ext_wound NO
+    SETVARIABLE part_rightleg_int_wound NO
+    SETVARIABLE part_rightleg_ext_scar NO
+    SETVARIABLE part_rightleg_int_scar NO
+    GOTO %tag_return
+
+skip_leftleg:
+    ECHO Skipping Left Leg
+    SETVARIABLE part_leftleg_ext_wound NO
+    SETVARIABLE part_leftleg_int_wound NO
+    SETVARIABLE part_leftleg_ext_scar NO
+    SETVARIABLE part_leftleg_int_scar NO
+    GOTO %tag_return
+
+skip_skin:
+    echo Skipping nervous system
+    SETVARIABLE part_skin_ext_wound NO
+    SETVARIABLE part_skin_int_wound NO
+    SETVARIABLE part_skin_ext_scar NO
+    SETVARIABLE part_skin_int_scar NO
+    GOTO %tag_return
+
+
+skip_int_wounds:
+    ECHO Skipping Internal Wounds
+    SETVARIABLE part_head_int_wound NO
+    SETVARIABLE part_righteye_int_wound NO
+    SETVARIABLE part_lefteye_int_wound NO
+    SETVARIABLE part_righthand_int_wound NO
+    SETVARIABLE part_lefthand_int_wound NO
+
+    SETVARIABLE part_neck_int_wound NO
+    SETVARIABLE part_chest_int_wound NO
+    SETVARIABLE part_head_int_wound NO
+    SETVARIABLE part_rightarm_int_wound NO
+    SETVARIABLE part_leftarm_int_wound NO
+    SETVARIABLE part_abdomen_int_wound NO
+    SETVARIABLE part_back_int_wound NO
+    SETVARIABLE part_rightleg_int_wound NO
+    SETVARIABLE part_leftleg_int_wound NO
+    SETVARIABLE part_skin_int_wound NO
+
+
+GOTO %tag_return
+
+
+skip_ext_wounds:
+    ECHO Skipping External Wounds
+    SETVARIABLE part_head_ext_wound NO
+    SETVARIABLE part_righteye_ext_wound NO
+    SETVARIABLE part_lefteye_ext_wound NO
+    SETVARIABLE part_righthand_ext_wound NO
+    SETVARIABLE part_lefthand_ext_wound NO
+
+    SETVARIABLE part_neck_ext_wound NO
+    SETVARIABLE part_chest_ext_wound NO
+    SETVARIABLE part_head_ext_wound NO
+    SETVARIABLE part_rightarm_ext_wound NO
+    SETVARIABLE part_leftarm_ext_wound NO
+    SETVARIABLE part_abdomen_ext_wound NO
+    SETVARIABLE part_back_ext_wound NO
+    SETVARIABLE part_rightleg_ext_wound NO
+    SETVARIABLE part_leftleg_ext_wound NO
+
+    SETVARIABLE part_skin_ext_wound NO
+
+GOTO %tag_return
+
+skip_int_scars:
+    ECHO Skipping Internal Scars
+    SETVARIABLE part_head_int_scar NO
+    SETVARIABLE part_righteye_int_scar NO
+    SETVARIABLE part_lefteye_int_scar NO
+    SETVARIABLE part_righthand_int_scar NO
+    SETVARIABLE part_lefthand_int_scar NO
+
+    SETVARIABLE part_neck_int_scar NO
+    SETVARIABLE part_chest_int_scar NO
+    SETVARIABLE part_head_int_scar NO
+    SETVARIABLE part_rightarm_int_scar NO
+    SETVARIABLE part_leftarm_int_scar NO
+    SETVARIABLE part_abdomen_int_scar NO
+    SETVARIABLE part_back_int_scar NO
+    SETVARIABLE part_rightleg_int_scar NO
+    SETVARIABLE part_leftleg_int_scar NO
+    SETVARIABLE part_skin_int_scar NO
+
+GOTO %tag_return
+
+skip_ext_scars:
+    ECHO Skipping External Scars
+    SETVARIABLE part_head_ext_scar NO
+    SETVARIABLE part_righteye_ext_scar NO
+    SETVARIABLE part_lefteye_ext_scar NO
+    SETVARIABLE part_righthand_ext_scar NO
+    SETVARIABLE part_lefthand_ext_scar NO
+
+    SETVARIABLE part_neck_ext_scar NO
+    SETVARIABLE part_chest_ext_scar NO
+    SETVARIABLE part_head_ext_scar NO
+    SETVARIABLE part_rightarm_ext_scar NO
+    SETVARIABLE part_leftarm_ext_scar NO
+    SETVARIABLE part_abdomen_ext_scar NO
+    SETVARIABLE part_back_ext_scar NO
+    SETVARIABLE part_rightleg_ext_scar NO
+    SETVARIABLE part_leftleg_ext_scar NO
+    SETVARIABLE part_skin_ext_scar NO
+
+GOTO %tag_return
+
+
+CheckMe:
+    match CheckMe ...wait
+    match Quit You are going to die basically messages
+    put perc health self
+    matchwait
+
+
+wound_list:
+ECHO ****************Wound Taking Status*******************
+ECHO HEAD
+ECHO ***External Wounds: %part_head_ext_wound
+ECHO ***External Scars: %part_head_ext_scar
+ECHO ***Internal Wounds: %part_head_int_wound
+ECHO ***Internal Scars: %part_head_int_scar
+ECHO RIGHT EYE
+ECHO ***External Wounds: %part_righteye_ext_wound
+ECHO ***External Scars: %part_righteye_ext_scar
+ECHO ***Internal Wounds: %part_righteye_int_wound
+ECHO ***Internal Scars: %part_righteye_int_scar
+ECHO LEFT EYE
+ECHO ***External Wounds: %part_lefteye_ext_wound
+ECHO ***External Scars: %part_lefteye_ext_scar
+ECHO ***Internal Wounds: %part_lefteye_int_wound
+ECHO ***Internal Scars: %part_lefteye_int_scar
+ECHO NECK
+ECHO ***External Wounds: %part_neck_ext_wound
+ECHO ***External Scars: %part_neck_ext_scar
+ECHO ***Internal Wounds: %part_neck_int_wound
+ECHO ***Internal Scars: %part_neck_int_scar
+ECHO RIGHT ARM
+ECHO ***External Wounds: %part_rightarm_ext_wound
+ECHO ***External Scars: %part_rightarm_ext_scar
+ECHO ***Internal Wounds: %part_rightarm_int_wound
+ECHO ***Internal Scars: %part_rightarm_int_scar
+ECHO LEFT ARM
+ECHO ***External Wounds: %part_leftarm_ext_wound
+ECHO ***External Scars: %part_leftarm_ext_scar
+ECHO ***Internal Wounds: %part_leftarm_int_wound
+ECHO ***Internal Scars: %part_leftarm_int_scar
+ECHO RIGHT HAND
+ECHO ***External Wounds: %part_righthand_ext_wound
+ECHO ***External Scars: %part_righthand_ext_scar
+ECHO ***Internal Wounds: %part_righthand_int_wound
+ECHO ***Internal Scars: %part_righthand_int_scar
+ECHO LEFT HAND
+ECHO ***External Wounds: %part_lefthand_ext_wound
+ECHO ***External Scars: %part_lefthand_ext_scar
+ECHO ***Internal Wounds: %part_lefthand_int_wound
+ECHO ***Internal Scars: %part_lefthand_int_scar
+ECHO CHEST
+ECHO ***External Wounds: %part_chest_ext_wound
+ECHO ***External Scars: %part_chest_ext_scar
+ECHO ***Internal Wounds: %part_chest_int_wound
+ECHO ***Internal Scars: %part_chest_int_scar
+ECHO BACK
+ECHO ***External Wounds: %part_back_ext_wound
+ECHO ***External Scars: %part_back_ext_scar
+ECHO ***Internal Wounds: %part_back_int_wound
+ECHO ***Internal Scars: %part_back_int_scar
+ECHO ABDOMEN
+ECHO ***External Wounds: %part_abdomen_ext_wound
+ECHO ***External Scars: %part_abdomen_ext_scar
+ECHO ***Internal Wounds: %part_abdomen_int_wound
+ECHO ***Internal Scars: %part_abdomen_int_scar
+ECHO RIGHT LEG
+ECHO ***External Wounds: %part_rightleg_ext_wound
+ECHO ***External Scars: %part_rightleg_ext_scar
+ECHO ***Internal Wounds: %part_rightleg_int_wound
+ECHO ***Internal Scars: %part_rightleg_int_scar
+ECHO LEFT LEG
+ECHO ***External Wounds: %part_leftleg_ext_wound
+ECHO ***External Scars: %part_leftleg_ext_scar
+ECHO ***Internal Wounds: %part_leftleg_int_wound
+ECHO ***Internal Scars: %part_leftleg_int_scar
+ECHO SKIN/NERVOUS SYSTEM
+ECHO ***External Wounds: %part_skin_ext_wound
+ECHO ***External Scars: %part_skin_ext_scar
+ECHO ***Internal Wounds: %part_skin_int_wound
+ECHO ***Internal Scars: %part_skin_int_scar
+
+GOTO Begin
+
+
+
+
+Fail_Touch:
+ECHO ***Helps if you supply a correct spelling of your patients name.
+goto Quit
+
+Fail_Quick:
+goto Quit
+
+Quit:
